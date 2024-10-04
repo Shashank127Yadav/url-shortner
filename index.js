@@ -14,7 +14,7 @@ connectToMongoDB("mongodb://localhost:27017/url-shortner").then(() =>
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
-// middleware
+// Middleware
 app.use(express.json());
 
 app.get("/test", async (req, res) => {
