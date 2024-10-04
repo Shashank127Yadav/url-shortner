@@ -12,4 +12,4 @@ Middleware: Express JSON
 Installation
 Prerequisites
 Node.js installed on your machine.
-MongoDB set up and running.
+MongoDB set up and running. 
