@@ -1,8 +1,12 @@
 const express = require("express");
 const path = require("path");
 const { connectToMongoDB } = require("./connect");
-const urlRoute = require("./routes/url");
+
 const URL = require("./models/url");
+
+const urlRoute = require("./routes/url");
+const staticRoute = require("./routes/staticRouter");
+const userRoute = require("./routes/user");
 
 const app = express();
 const PORT = 8001;
@@ -16,13 +20,12 @@ app.set("views", path.resolve("./views"));
 
 // Middleware
 app.use(express.json());
-
-app.get("/test", async (req, res) => {
-  const allUrls = await URL.find({});
-  return res.render("home");
-});
+// middleware for parse form
+app.use(express.urlencoded({ extended: false }));
 
 app.use("/url", urlRoute);
+app.use("/user", userRoute);
+app.use("/", staticRoute);
 
 app.get("url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
