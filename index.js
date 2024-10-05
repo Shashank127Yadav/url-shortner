@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const { connectToMongoDB } = require("./connect");
+const { chechForAuthentication, restrictTo } = require("./middlewares/auth");
 
 const URL = require("./models/url");
 
@@ -22,12 +24,14 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 // middleware for parse form
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(chechForAuthentication);
 
-app.use("/url", urlRoute);
+app.use("/url", restrictTo(["NORMAL", "ADMIN"]), urlRoute);
 app.use("/user", userRoute);
 app.use("/", staticRoute);
 
-app.get("url/:shortId", async (req, res) => {
+app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
   const entry = await URL.findOneAndUpdate(
     {
